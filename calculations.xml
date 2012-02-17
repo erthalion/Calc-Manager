@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Experiment Count="2">
+    <Calculation Filename="run" PostBuild="postBuild.sh">
+        <Description>Test1</Description>
+    	<Parameters Precision="0.0001" TimeStep="0.001" Time="1000" OutputFile="output" Frequency="10"/>
+    	<Area Length="1.0" Height="1.0" NodeX="50" NodeY="50"/>
+    </Calculation>
+    <Calculation Filename="run" PostBuild="postBuild.sh">
+        <Description>Test2</Description>
+    	<Parameters Precision="0.0001" TimeStep="0.001" Time="1000" OutputFile="output" Frequency="10"/>
+    	<Area Length="1.0" Height="1.0" NodeX="50" NodeY="50"/>
+    </Calculation>
+</Experiment>
