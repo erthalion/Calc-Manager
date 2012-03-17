@@ -13,12 +13,28 @@ if __name__ == "__main__":
     doc = etree.parse ( sys.argv[1],parser)
 
     for i in range(0,len(schema.calculations)):
+        #create description file
+        descrText = str.format("Area parameters:\nHeight {0}\nLenght {1}\nNx {2}\nNy{3}\n",
+        schema.area[i]['Height'],
+        schema.area[i]['Length'],
+        schema.area[i]['NodeX'],
+        schema.area[i]['NodeY'])
+
+        descrText+=str.format("Task parameters:\nPrecision {0}\nTime {1}\nTimeStep {2}\n",
+        schema.parameters[i]['Precision'],
+        schema.parameters[i]['Time'],
+        schema.parameters[i]['TimeStep'])
+
+        descrText+=schema.descriptions[i]
         dateCalc = strftime("%Y-%m-%d:%H-%M-"+str(i))
-        os.mkdir(dateCalc)
-        
-        description=open("./"+dateCalc+"/Description.txt","w")
-        description.write(schema.descriptions[i])
-        description.close()
+
+        try:
+            os.mkdir(dateCalc)
+            description=open("./"+dateCalc+"/Description.txt","w")
+            description.write(descrText)
+            description.close()
+        except:
+            sys.exit("could't write descr file\n")
 
         #process
         subprocess.call(["./"+schema.calculations[i]['Filename'],
