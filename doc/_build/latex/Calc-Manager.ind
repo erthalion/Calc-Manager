@@ -1,0 +1,13 @@
+\begin{theindex}
+\def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
+
+  \bigletter S
+  \item start() (Task.Task method), \hyperpage{5}
+
+  \indexspace
+  \bigletter T
+  \item Task (class in Task), \hyperpage{5}
+  \item Task (module), \hyperpage{5}
+  \item TaskServer (module), \hyperpage{3}
+
+\end{theindex}

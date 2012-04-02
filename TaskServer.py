@@ -4,6 +4,11 @@
 import SocketServer
 import threading
 import logging
+import StringIO
+import Task
+
+from CollectorTarget import CollectorTarget
+from lxml import etree
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(name)s: %(message)s',
@@ -26,20 +31,28 @@ class TaskRequestHandler( SocketServer.BaseRequestHandler):
 
         data = self.request.recv(1024)
         print data
-        data = data.replace('\n','')
-        if data == 'shutdown':
+
+        clearData = data.replace('\n','')
+        if clearData == 'shutdown':
             print 'server shutdown!'
             response = 'server shutdown!'
             self.request.sendall(response)
             self.server.shutdown()
 
-        if data == 'load':
+        if clearData == 'load':
             while 1:
                 print 'load'
 
-        if data == 'echo':
+        if clearData == 'echo':
             response = 'echo'
             self.request.sendall(response)
+
+        schema=CollectorTarget()
+        parser = etree.XMLParser(target = schema)
+        doc = etree.XML(data,parser)
+        
+        task = Task.Task(schema)
+        task.start()
 
     def finish(self):
         self.logger.debug('finish')
