@@ -46,6 +46,9 @@ class TaskRequestHandler( SocketServer.BaseRequestHandler):
         if clearData == 'echo':
             response = 'echo'
             self.request.sendall(response)
+        
+        response = 'task accepted!'
+        self.request.sendall(response)
 
         schema=CollectorTarget()
         parser = etree.XMLParser(target = schema)
