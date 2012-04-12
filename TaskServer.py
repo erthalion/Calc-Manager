@@ -5,7 +5,7 @@ import SocketServer
 import threading
 import logging
 import StringIO
-import Task
+import TaskManager
 
 from CollectorTarget import CollectorTarget
 from lxml import etree
@@ -38,24 +38,27 @@ class TaskRequestHandler( SocketServer.BaseRequestHandler):
             response = 'server shutdown!'
             self.request.sendall(response)
             self.server.shutdown()
-
-        if clearData == 'load':
-            while 1:
-                print 'load'
+            return
 
         if clearData == 'echo':
             response = 'echo'
             self.request.sendall(response)
+            return
         
-        response = 'task accepted!'
-        self.request.sendall(response)
-
         schema=CollectorTarget()
         parser = etree.XMLParser(target = schema)
         doc = etree.XML(data,parser)
         
-        task = Task.Task(schema)
-        task.start()
+        taskManager = TaskManager.TaskManager(schema)
+        taskList=taskManager.start()
+       
+        for task in taskList:
+            print task.getUid()
+            response="task "+str(task.getUid())+" acepted!"
+            self.request.send(response)
+        
+        self.request.close()
+
 
     def finish(self):
         self.logger.debug('finish')
