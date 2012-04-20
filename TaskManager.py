@@ -13,6 +13,7 @@ import subprocess
 import logging
 import Task
 import uuid
+import GnuPlot
 from CollectorTarget import CollectorTarget
 from time import strftime
 from lxml import etree
@@ -79,6 +80,7 @@ class TaskManager:
             dateCalc,uid=self.__createDescription__(i)
             #process
             self.taskList.append(Task.Task(self.schema,i,dateCalc,uid))
+            self.taskList[i].setPlotService(GnuPlot.GnuPlotService())
             self.taskList[i].start()
 
 

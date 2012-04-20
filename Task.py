@@ -12,6 +12,8 @@ import select
 import subprocess
 import logging
 import uuid
+import IPlotService
+
 from CollectorTarget import CollectorTarget
 from time import strftime
 from lxml import etree
@@ -39,10 +41,12 @@ class Task(Thread):
         self.number=number
         self.dateCalc=dateCalc
         self.logger = logging.getLogger('Task')
-        print str.format("number {0}\ndateCalc {1}",self.number,self.dateCalc)
 
     def getUid(self):
         return self.uid
+
+    def setPlotService(self,plotService):
+        self.plotService = plotService
 
     def run(self):
         """Start calculation with prebuild/postbuild
@@ -51,7 +55,8 @@ class Task(Thread):
         loop=True
 
         #preprocess
-
+        os.popen4("./make")
+        
         #process
         runCmd = str.format("./{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}",
                             self.schema.calculations[self.number]['Filename'],
@@ -86,5 +91,7 @@ class Task(Thread):
 
         #postprocess
         time = int(self.schema.parameters[self.number]['Time'])/int(self.schema.parameters[self.number]['Frequency'])
-        subprocess.call(["./"+self.schema.calculations[self.number]['PostBuild'],
-                         self.dateCalc+"/"+self.schema.parameters[self.number]['OutputFile'],str(time)])
+        self.plotService.plotAnimation(self.dateCalc+"/"+self.schema.parameters[self.number]['OutputFile'],time)
+        self.plotService.convertToVideo(self.dateCalc+"/"+self.schema.parameters[self.number]['OutputFile'])
+        #subprocess.call(["./"+self.schema.calculations[self.number]['PostBuild'],
+        #                 self.dateCalc+"/"+self.schema.parameters[self.number]['OutputFile'],str(time)])
