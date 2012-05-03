@@ -1,3 +1,5 @@
+import logging
+
 class CollectorTarget:
     calculations=[]
     parameters=[]
@@ -7,6 +9,9 @@ class CollectorTarget:
 
     def __init__(self):
         is_descr=False
+        self.logger = logging.getLogger('CollectorTarget')
+        self.logger.debug("__init__")
+
 
     def start(self, tag, attrib):
         if tag == 'Calculation':

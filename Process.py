@@ -17,13 +17,14 @@ logging.basicConfig(level=logging.DEBUG,
 
 class ProcessService():
     def __init__(self):
-        pass
+        self.logger = logging.getLogger('ProcessService')
+        self.logger.debug("__init__")
 
     def startWithStdIO(self,cmd):
         '''
         start for collect std output (for get runtime info)
         '''
-        print cmd
+        self.logger.debug(cmd)
         proc = subprocess.Popen(cmd,shell=True,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,close_fds=True)
         return (proc.stdin,proc.stdout)
 
@@ -31,7 +32,7 @@ class ProcessService():
         '''
         simple start (for gnuplot animation and mencoder)
         '''
-        print cmd
+        self.logger.debug(cmd)
         subprocess.call(cmd,shell=True)
 
     def startAsync(self,cmd):

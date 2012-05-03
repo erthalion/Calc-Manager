@@ -30,11 +30,11 @@ class TaskRequestHandler( SocketServer.BaseRequestHandler):
         self.logger.debug('handle')
 
         data = self.request.recv(1024)
-        print data
+        self.logger.debug(data)
 
         clearData = data.replace('\n','')
         if clearData == 'shutdown':
-            print 'server shutdown!'
+            self.logger.debug('server shutdown!')
             response = 'server shutdown!'
             self.request.sendall(response)
             self.server.shutdown()
@@ -53,7 +53,6 @@ class TaskRequestHandler( SocketServer.BaseRequestHandler):
         taskList=taskManager.start()
 
         for task in taskList:
-            print task.getUid()
             response="task "+str(task.getUid())+" acepted!"
             self.request.send(response)
 

@@ -39,6 +39,7 @@ class TaskManager:
         self.schema=schema
         self.taskList=[]
         self.logger = logging.getLogger('TaskManager')
+        self.logger.debug('__init__')
 
     def __createDescription__(self,i):
         """Create metadata with descrition of calculations
@@ -60,7 +61,7 @@ class TaskManager:
 
         uid = uuid.uuid1()
         dateCalc = strftime("%Y-%m-%d:%H-%M-"+str(uid))
-        print dateCalc
+        self.logger.debug(dateCalc)
 
         try:
             os.mkdir(dateCalc)

@@ -16,7 +16,8 @@ logging.basicConfig(level=logging.DEBUG,
 
 class GnuPlotService():
     def __init__(self):
-        pass
+        self.logger = logging.getLogger('GnuPlotService')
+        self.logger.debug("__init__")
 
 
     '''filename without extension
@@ -39,13 +40,11 @@ class GnuPlotService():
         for i in range(0,countIterations):
             gnuplotScript.write("splot \""+filename+".dat\" index "+str(i)+" using 1:2:3 with pm3d t \"waves\"\n")
 
-        #os.system("gnuplot "+filename+".gpi")
         cmd = "gnuplot "+filename+".gpi"
         self.processService.start(cmd)
 
     def convertToVideo(self,filename):
         cmd="mencoder "+filename+".gif -mf fps=25 -o "+filename+".avi -ovc lavc -lavcopts vcodec=mpeg4"
-        #os.system(cmd)
         self.processService.start(cmd)
 
     def setProcessService(self,processService):

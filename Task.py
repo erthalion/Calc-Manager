@@ -40,6 +40,7 @@ class Task(Thread):
         self.number=number
         self.dateCalc=dateCalc
         self.logger = logging.getLogger('Task')
+        self.logger.debug("__init__")
 
     def getUid(self):
         return self.uid
@@ -58,7 +59,6 @@ class Task(Thread):
         loop=True
 
         #preprocess
-        #os.popen4("./make")
         self.processService.start("make -C Kurs")
 
         #process
@@ -73,7 +73,6 @@ class Task(Thread):
                             self.schema.parameters[self.number]['Time'],
                             self.schema.parameters[self.number]['TimeStep'],
                             self.schema.parameters[self.number]['Frequency'])
-        #w,rr=os.popen4(runCmd)
         w, rr = self.processService.startWithStdIO(runCmd)
         input=[rr]
         while loop:
