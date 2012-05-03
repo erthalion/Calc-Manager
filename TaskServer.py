@@ -44,19 +44,19 @@ class TaskRequestHandler( SocketServer.BaseRequestHandler):
             response = 'echo'
             self.request.sendall(response)
             return
-        
+
         schema=CollectorTarget()
         parser = etree.XMLParser(target = schema)
         doc = etree.XML(data,parser)
-        
+
         taskManager = TaskManager.TaskManager(schema)
         taskList=taskManager.start()
-       
+
         for task in taskList:
             print task.getUid()
             response="task "+str(task.getUid())+" acepted!"
             self.request.send(response)
-        
+
         self.request.close()
 
 
@@ -110,9 +110,9 @@ class TaskServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
         self.logger.debug('close_request(%s)', request_address)
         return SocketServer.TCPServer.close_request(self, request_address)
 
-def main():     
+def main():
     HOST='localhost'
-    PORT=9997
+    PORT=9998
     server = TaskServer((HOST,PORT),TaskRequestHandler)
     server_thread = threading.Thread(target=server.serve_forever)
     #server_thread.daemon = True

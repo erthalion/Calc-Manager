@@ -9,7 +9,6 @@
 import sys
 import os
 import logging
-import IPlotService
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(name)s: %(message)s',
@@ -27,7 +26,7 @@ class GnuPlotService():
         gnuplotScript.writelines({"clear\n",
                                   "reset\n",
                                   "set terminal gif animate delay 10\n",
-                                  "set output"+filename+".gif\n",
+                                  "set output \""+filename+".gif\"\n",
                                   "set isosample 40,40\n",
                                   "set hidden3d\n",
                                   "set xrange [0:1]\n",
@@ -38,9 +37,16 @@ class GnuPlotService():
                                   "set zlabel \"Z\"\n",
                                   "set cbrange [-0.003:0.007]\n"})
         for i in range(0,countIterations):
-            gnuplotScript.write("splot \""+filename+".dat\" index "+str(i)+" using 1:2:3 with pm3d t \"waves\"")
+            gnuplotScript.write("splot \""+filename+".dat\" index "+str(i)+" using 1:2:3 with pm3d t \"waves\"\n")
 
-        os.popen4("gnuplot "+filename+".gpi")
+        #os.system("gnuplot "+filename+".gpi")
+        cmd = "gnuplot "+filename+".gpi"
+        self.processService.start(cmd)
 
     def convertToVideo(self,filename):
-        os.popen4("mencoder "+filename+".gif -mf fps=25 -o "+filename+".avi -ovc lavc -lavcopts vcodec=mpeg4")
+        cmd="mencoder "+filename+".gif -mf fps=25 -o "+filename+".avi -ovc lavc -lavcopts vcodec=mpeg4"
+        #os.system(cmd)
+        self.processService.start(cmd)
+
+    def setProcessService(self,processService):
+        self.processService = processService
