@@ -1,15 +1,26 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<Experiment Count="1">
-    <Calculation Filename="run" PostBuild="postBuild.sh" OutputType="gnuplot">
-        <Description>Test1</Description>
-    	<Parameters Precision="0.0001" TimeStep="0.001" Time="1000" OutputFile="output" Frequency="10"/>
-    	<Area Length="1.0" Height="1.0" NodeX="50" NodeY="50"/>
-        <Preprocess>
-            <CompilationType>make</CompilationType>
-            <SourcePath></SourcePath>
-        </Preprocess>
-        <PostProcess>
-            <OutputType>gnuplot</OutputType>
-        </PostProcess>
-    </Calculation>
-</Experiment>
+<?xml version="1.0" encoding="UTF-8"?>
+<experiment Count="1">
+    <calculation filename="run">
+        <description>Test1</description>
+    	<parameters>
+            <precision>0.0001</precision>
+            <timestep>0.001</timestep>
+            <time>1000</time>
+            <outputfile>output</outputfile>
+            <frequency>10</frequency>
+        </parameters>
+    	<area>
+            <length>1.0</length>
+            <height>1.0</height>
+            <nodex>50</nodex>
+            <nodey>50</nodey>
+        </area>
+        <preprocess>
+            <compilationtype>make</compilationtype>
+            <sourcepath>Kurs/</sourcepath>
+        </preprocess>
+        <postprocess>
+            <outputtype>gnuplot</outputtype>
+        </postprocess>
+    </calculation>
+</experiment>

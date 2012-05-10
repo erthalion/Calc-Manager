@@ -14,6 +14,10 @@ logging.basicConfig(level=logging.DEBUG,
                     format='%(name)s: %(message)s',
                    )
 
+def setValue(dictionary,key,parameter,index):
+    #dictionary.append({key:parameter.text})
+    dictionary[index][key]=parameter.text
+
 class TaskRequestHandler( SocketServer.BaseRequestHandler):
 
     def __init__(self,request,client_address,server):
@@ -45,16 +49,91 @@ class TaskRequestHandler( SocketServer.BaseRequestHandler):
             self.request.sendall(response)
             return
 
-        schema=CollectorTarget()
-        parser = etree.XMLParser(target = schema)
-        doc = etree.XML(data,parser)
+        #schema=CollectorTarget()
+        #parser = etree.XMLParser(target = schema)
+        #doc = etree.XML(data,parser)
 
-        taskManager = TaskManager.TaskManager(schema)
-        taskList=taskManager.start()
+        tree = etree.XML(data)
+        schema = CollectorTarget()
+        calculations = tree.xpath('/experiment/calculation')
 
-        for task in taskList:
-            response="task "+str(task.getUid())+" acepted!"
-            self.request.send(response)
+        Calculation=[]
+        Parameters=[]
+        Area=[]
+        Preprocess=[]
+        Postprocess=[]
+        Description=[]
+
+        for index,calc in enumerate(calculations):
+            '''
+            add empty element for dict
+            '''
+            Calculation.append(calc.attrib)
+            Parameters.append({})
+            Area.append({})
+            Preprocess.append({})
+            Postprocess.append({})
+
+            for param in list(calc):
+                if param.tag == 'description':
+                    Description.append(param.text)
+
+                if param.tag == 'parameters':
+                    for parameter in list(param):
+                        if parameter.tag == 'precision':
+                            setValue(Parameters,'presicion',parameter,index)
+
+                        if parameter.tag == 'timestep':
+                            setValue(Parameters,'timestep',parameter,index)
+
+                        if parameter.tag == 'time':
+                            setValue(Parameters,'time',parameter,index)
+
+                        if parameter.tag == 'outputfile':
+                            setValue(Parameters,'outputfile',parameter,index)
+
+                        if parameter.tag == 'frequency':
+                            setValue(Parameters,'frequency',parameter,index)
+
+                if param.tag == 'area':
+                    for area in list(param):
+                        if area.tag == 'length':
+                            setValue(Area,'length',area,index)
+
+                        if area.tag == 'height':
+                            setValue(Area,'height',area,index)
+
+                        if area.tag == 'nodex':
+                            setValue(Area,'nodex',area,index)
+
+                        if area.tag == 'nodey':
+                            setValue(Area,'nodey',area,index)
+
+                if param.tag == 'preprocess':
+                    for preprocess in list(param):
+                        if preprocess.tag == 'compilationtype':
+                            setValue(Preprocess,'compilationtype',preprocess,index)
+
+                        if preprocess.tag == 'sourcepath':
+                            setValue(Preprocess,'sourcepath',preprocess,index)
+
+                if param.tag == 'postprocess':
+                    for postprocess in list(param):
+                        if postprocess.tag == 'outputtype':
+                            setValue(Postprocess,'outputtype',postprocess,index)
+
+
+        schema.descriptions=Description
+        schema.calculations=Calculation
+        schema.parameters=Parameters
+        schema.area=Area
+
+        #taskManager = TaskManager.TaskManager(schema)
+        #taskList=taskManager.start()
+
+        #for task in taskList:
+        #    response="task "+str(task.getUid())+" acepted!"
+        #    self.request.send(response)
 
         self.request.close()
 
