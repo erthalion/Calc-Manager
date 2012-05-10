@@ -63,16 +63,16 @@ class Task(Thread):
 
         #process
         runCmd = str.format("./{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}",
-                            self.schema.calculations[self.number]['Filename'],
-                            self.schema.area[self.number]['Height'],
-                            self.schema.area[self.number]['Length'],
-                            self.schema.area[self.number]['NodeX'],
-                            self.schema.area[self.number]['NodeY'],
-                            self.schema.parameters[self.number]['Precision'],
-                            self.dateCalc+"/"+self.schema.parameters[self.number]['OutputFile']+".dat",
-                            self.schema.parameters[self.number]['Time'],
-                            self.schema.parameters[self.number]['TimeStep'],
-                            self.schema.parameters[self.number]['Frequency'])
+                            self.schema.calculations[self.number]['filename'],
+                            self.schema.area[self.number]['height'],
+                            self.schema.area[self.number]['length'],
+                            self.schema.area[self.number]['nodex'],
+                            self.schema.area[self.number]['nodey'],
+                            self.schema.parameters[self.number]['precision'],
+                            self.dateCalc+"/"+self.schema.parameters[self.number]['outputfile']+".dat",
+                            self.schema.parameters[self.number]['time'],
+                            self.schema.parameters[self.number]['timestep'],
+                            self.schema.parameters[self.number]['frequency'])
         w, rr = self.processService.startWithStdIO(runCmd)
         input=[rr]
         while loop:
@@ -93,6 +93,6 @@ class Task(Thread):
 
 
         #postprocess
-        time = int(self.schema.parameters[self.number]['Time'])/int(self.schema.parameters[self.number]['Frequency'])
-        self.plotService.plotAnimation(self.dateCalc+"/"+self.schema.parameters[self.number]['OutputFile'],time)
-        self.plotService.convertToVideo(self.dateCalc+"/"+self.schema.parameters[self.number]['OutputFile'])
+        time = int(self.schema.parameters[self.number]['time'])/int(self.schema.parameters[self.number]['frequency'])
+        self.plotService.plotAnimation(self.dateCalc+"/"+self.schema.parameters[self.number]['outputfile'],time)
+        self.plotService.convertToVideo(self.dateCalc+"/"+self.schema.parameters[self.number]['outputfile'])

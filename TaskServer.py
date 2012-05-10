@@ -15,7 +15,6 @@ logging.basicConfig(level=logging.DEBUG,
                    )
 
 def setValue(dictionary,key,parameter,index):
-    #dictionary.append({key:parameter.text})
     dictionary[index][key]=parameter.text
 
 class TaskRequestHandler( SocketServer.BaseRequestHandler):
@@ -81,7 +80,7 @@ class TaskRequestHandler( SocketServer.BaseRequestHandler):
                 if param.tag == 'parameters':
                     for parameter in list(param):
                         if parameter.tag == 'precision':
-                            setValue(Parameters,'presicion',parameter,index)
+                            setValue(Parameters,'precision',parameter,index)
 
                         if parameter.tag == 'timestep':
                             setValue(Parameters,'timestep',parameter,index)
@@ -128,12 +127,13 @@ class TaskRequestHandler( SocketServer.BaseRequestHandler):
         schema.parameters=Parameters
         schema.area=Area
 
-        #taskManager = TaskManager.TaskManager(schema)
-        #taskList=taskManager.start()
+        print 'task manager starting'
+        taskManager = TaskManager.TaskManager(schema)
+        taskList=taskManager.start()
 
-        #for task in taskList:
-        #    response="task "+str(task.getUid())+" acepted!"
-        #    self.request.send(response)
+        for task in taskList:
+            response="task "+str(task.getUid())+" acepted!"
+            self.request.send(response)
 
         self.request.close()
 

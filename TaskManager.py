@@ -48,15 +48,15 @@ class TaskManager:
         """
 
         descrText = str.format("Area parameters:\nHeight {0}\nLenght {1}\nNx {2}\nNy{3}\n",
-                               self.schema.area[i]['Height'],
-                               self.schema.area[i]['Length'],
-                               self.schema.area[i]['NodeX'],
-                               self.schema.area[i]['NodeY'])
+                               self.schema.area[i]['height'],
+                               self.schema.area[i]['length'],
+                               self.schema.area[i]['nodex'],
+                               self.schema.area[i]['nodey'])
 
         descrText+=str.format("Task parameters:\nPrecision {0}\nTime {1}\nTimeStep {2}\n",
-                              self.schema.parameters[i]['Precision'],
-                              self.schema.parameters[i]['Time'],
-                              self.schema.parameters[i]['TimeStep'])
+                              self.schema.parameters[i]['precision'],
+                              self.schema.parameters[i]['time'],
+                              self.schema.parameters[i]['timestep'])
         descrText+=self.schema.descriptions[i]
 
         uid = uuid.uuid1()
