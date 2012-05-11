@@ -38,12 +38,16 @@ class Task(Thread):
         self.schema=schema
         self.uid=uid
         self.number=number
+        self.state='not started'
         self.dateCalc=dateCalc
         self.logger = logging.getLogger('Task')
         self.logger.debug("__init__")
 
     def getUid(self):
         return self.uid
+
+    def getState(self):
+        return self.state
 
     def setPlotService(self,plotService):
         self.plotService = plotService
@@ -60,6 +64,7 @@ class Task(Thread):
 
         #preprocess
         self.processService.start("make -C Kurs")
+        self.state = 'compiled'
 
         #process
         runCmd = str.format("./{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}",
@@ -88,11 +93,15 @@ class Task(Thread):
 
                 if not s:
                     input.remove(op)
-                #else:
-                #    print '>',s.rstrip()
+                else:
+                    self.state=s.rstrip()
 
 
+        self.state='solved'
         #postprocess
         time = int(self.schema.parameters[self.number]['time'])/int(self.schema.parameters[self.number]['frequency'])
         self.plotService.plotAnimation(self.dateCalc+"/"+self.schema.parameters[self.number]['outputfile'],time)
+        self.state='plotted'
+
         self.plotService.convertToVideo(self.dateCalc+"/"+self.schema.parameters[self.number]['outputfile'])
+        self.state='completed'

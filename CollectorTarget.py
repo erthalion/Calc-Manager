@@ -1,32 +1,48 @@
 import logging
+from lxml import etree
+
+def setValue(dictionary,key,parameter,index):
+    dictionary[index][key]=parameter.text
 
 class CollectorTarget:
     calculations=[]
     parameters=[]
     area=[]
     descriptions=[]
-    is_descr=False
+    preprocesses=[]
+    postprocesses=[]
 
-    def __init__(self):
-        is_descr=False
-        self.logger = logging.getLogger('CollectorTarget')
-        self.logger.debug("__init__")
+    def __init__(self,data):
+        tree = etree.XML(data)
+        calcus = tree.xpath('/experiment/calculation')
 
+        for index,calc in enumerate(calcus):
+            '''
+            add empty element for dict
+            '''
+            self.calculations.append(calc.attrib)
+            self.parameters.append({})
+            self.area.append({})
+            self.preprocesses.append({})
+            self.postprocesses.append({})
 
-    def start(self, tag, attrib):
-        if tag == 'Calculation':
-            self.calculations.append(attrib)
-        if tag == 'Parameters':
-            self.parameters.append(attrib)
-        if tag == 'Area':
-            self.area.append(attrib)
-        if tag == 'Description':
-            self.is_descr=True
+            for param in list(calc):
+                if param.tag == 'description':
+                    self.descriptions.append(param.text)
 
-    def data(self, data):
-        if(self.is_descr):
-            self.descriptions.append("%s" % (data))
+                if param.tag == 'parameters':
+                    for parameter in list(param):
+                        setValue(self.parameters,parameter.tag,parameter,index)
 
-    def end(self,tag):
-        if tag == 'Description':
-            self.is_descr = False
+                if param.tag == 'area':
+                    for area in list(param):
+                        setValue(self.area,area.tag,area,index)
+
+                if param.tag == 'preprocess':
+                    for preprocess in list(param):
+                        setValue(self.preprocesses,preprocess.tag,preprocess,index)
+
+                if param.tag == 'postprocess':
+                    for postprocess in list(param):
+                            setValue(self.postprocesses,postprocess.tag,postprocess,index)
+
